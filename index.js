@@ -10,6 +10,20 @@ const port = argv.port || 3000
 
 app.get('/ping', actions.ping)
 
+app.use('/a', [
+  mw.setHeaders,
+  bodyParser.json({ limit: bodyLimit }),
+  mw.setupTemp,
+  mw.writeHtmlFileFromTemplate,
+  mw.convertHtmlToPdf,
+  mw.createFileList,
+  mw.mergeFileList,
+  mw.createPdfStamp,
+  mw.addStamp,
+  mw.errorHandler
+])
+app.post('/a', actions.sendFile)
+
 app.use('/', [
   mw.setHeaders,
   bodyParser.json({ limit: bodyLimit }),
@@ -22,7 +36,7 @@ app.use('/', [
   mw.addStamp,
   mw.errorHandler
 ])
-
 app.post('/', actions.sendFile)
+
 
 app.listen(port, () => console.log('server listening on port %d', port))
